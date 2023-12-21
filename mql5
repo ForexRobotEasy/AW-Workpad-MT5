@@ -1,0 +1,132 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                              AW Workpad MT5      |
+//|                            https://www.forexroboteasy.com        |
+//|                                                        Forex Robot Easy Team |
+//+------------------------------------------------------------------+
+#property copyright 'Forex Robot Easy Team'
+#property link      'https://www.forexroboteasy.com'
+
+//+------------------------------------------------------------------+
+//| Global variables                                                  |
+//+------------------------------------------------------------------+
+input double LotSize = 0.01;        // Lot size for trading
+input double StopLoss = 100;        // Stop Loss in points
+input double TakeProfit = 200;      // Take Profit in points
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   // Add your initialization code here
+
+   return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   // Add your deinitialization code here
+}
+
+//+------------------------------------------------------------------+
+//| Expert start function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Add your trading logic here
+
+   // Example: Open a buy position
+   if (Ask < Bid)
+   {
+      // Calculate stop loss and take profit levels
+      double stopLossLevel = Ask - StopLoss * Point;
+      double takeProfitLevel = Ask + TakeProfit * Point;
+
+      // Open a buy position with specified lot size, stop loss, and take profit
+      int ticket = OrderSend(Symbol(), OP_BUY, LotSize, Ask, 5, stopLossLevel, takeProfitLevel, 'Buy', 0, 0, Green);
+      
+      if (ticket > 0)
+      {
+         Print('Buy order placed successfully');
+      }
+      else
+      {
+         Print('Failed to place buy order. Error code: ', GetLastError());
+      }
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Custom Functions                                                  |
+//+------------------------------------------------------------------+
+// Place a pending order
+void PlacePendingOrder(int type, double price, double stopLoss, double takeProfit)
+{
+   // Calculate stop loss and take profit levels
+   double stopLossLevel = price - stopLoss * Point;
+   double takeProfitLevel = price + takeProfit * Point;
+
+   // Open a pending order with specified type, price, stop loss, and take profit
+   int ticket = OrderSend(Symbol(), type, LotSize, price, 5, stopLossLevel, takeProfitLevel, 'Pending Order', 0, 0, Blue);
+
+   if (ticket > 0)
+   {
+      Print('Pending order placed successfully');
+   }
+   else
+   {
+      Print('Failed to place pending order. Error code: ', GetLastError());
+   }
+}
+
+// Modify an existing order
+void ModifyOrder(int ticket, double stopLoss, double takeProfit)
+{
+   // Calculate stop loss and take profit levels
+   double stopLossLevel = stopLoss * Point;
+   double takeProfitLevel = takeProfit * Point;
+
+   // Modify the order with specified ticket, stop loss, and take profit
+   bool result = OrderModify(ticket, 0, stopLossLevel, takeProfitLevel, 0, Green);
+
+   if (result)
+   {
+      Print('Order modified successfully');
+   }
+   else
+   {
+      Print('Failed to modify order. Error code: ', GetLastError());
+   }
+}
+
+// Cancel an existing order
+void CancelOrder(int ticket)
+{
+   // Close the order with specified ticket
+   bool result = OrderDelete(ticket);
+
+   if (result)
+   {
+      Print('Order canceled successfully');
+   }
+   else
+   {
+      Print('Failed to cancel order. Error code: ', GetLastError());
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Custom Indicator Functions                                        |
+//+------------------------------------------------------------------+
+// Implement your custom indicator functions here
+
+//+------------------------------------------------------------------+
+//| Custom Analysis Functions                                         |
+//+------------------------------------------------------------------+
+// Implement your custom analysis functions here
+
+//+------------------------------------------------------------------+
